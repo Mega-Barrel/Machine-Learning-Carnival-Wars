@@ -1,39 +1,113 @@
-# Machine-Learning-Carnival-Wars
+# **The Process is divided in 4 Steps**
+- [x] Cleaning the Data
+- [x] Removing Outliers
+- [x] EDA on cleaned dataset
+- [x] Model Building
 
-Link to Official Hackthon [HackerEarth Machine Learning Challenge: Carnival Wars!](https://www.hackerearth.com/challenges/competitive/hackerearth-machine-learning-challenge-predict-selling-price/ "Title").
+# **Cleaning The Data-Set**
 
-<br>
+**Filling NaN values with Median for Train Dataset**
 
-**Problem statement**
+```python
+fill_na_train = train_df['Stall_no'].median()
+train_df['Stall_no'].fillna(fill_na_train, inplace=True)
 
-Boo yeah, it’s the holiday season again! You are visiting your folks who live by the countryside. On Halloween night, their neighbors hosted a phenomenal carnival with the greatest pomp and show. People dressed up in their spookiest costumes; families went trick-or-treating; almost everyone came together to have a great time.
-<br>
+fill_na_train = train_df['Discount_avail'].median()
+train_df['Discount_avail'].fillna(fill_na_train, inplace=True)
 
-For the carnival, your neighbors had set up multiple stalls for entertaining their guests. When it’s your turn to host a carnival during Christmas, you wish to promote local businesses and help boost their sales. 
+fill_na_train = train_df['charges_1'].median()
+train_df['charges_1'].fillna(fill_na_train, inplace=True)
 
-You plan to unleash the inner Machine Learning expert in you and build a sophisticated Machine Learning model that predicts selling prices of products based on the mentioned factors.
+fill_na_train = train_df['charges_2 (%)'].median()
+train_df['charges_2 (%)'].fillna(fill_na_train, inplace=True)
 
-<br>
-<br>
+fill_na_train = train_df['Minimum_price'].median()
+train_df['Minimum_price'].fillna(fill_na_train, inplace=True)
 
+fill_na_train = train_df['Maximum_price'].median()
+train_df['Maximum_price'].fillna(fill_na_train, inplace=True)
 
-**Dataset**
+fill_na_train = train_df['Selling_Price'].median()
+train_df['Selling_Price'].fillna(fill_na_train, inplace=True)
+```
 
-The dataset consists of parameters such as product and market categories, quality and demand of the product, its minimum and maximum prices, available discount applicable on the product, and the like.
+**Checking all values were filled**
 
-The benefits of practicing this problem by using Machine Learning techniques are as follows:
+```python
+train_df.isnull().sum()
+```
+**Output:**
+```Product_id            0
+Stall_no              0
+instock_date          0
+Market_Category       0
+Customer_name       211
+Loyalty_customer      0
+Product_Category      0
+Grade                 0
+Demand                0
+Discount_avail        0
+charges_1             0
+charges_2 (%)         0
+Minimum_price         0
+Maximum_price         0
+Selling_Price         0
+dtype: int64
+```
 
-* This challenge encourages you to apply your Machine Learning skills to build a model that predicts the price of a product with given parameter values.
-* This challenge will help you enhance your knowledge of regression. Regression is one of the basic building blocks of Machine Learning.
-We challenge you to build a model that successfully predicts the selling price of a given product.
+**Filling NaN values with Median for Test Dataset**
 
-<br>
-<br>
+```python
+fill_na_test = test_df['Stall_no'].median()
+test_df['Stall_no'].fillna(fill_na_test, inplace=True)
 
-**Overview**
+fill_na_test = test_df['charges_1'].median()
+test_df['charges_1'].fillna(fill_na_test, inplace=True)
 
-Machine Learning is an application of Artificial Intelligence (AI) that provides systems with the ability to automatically learn and improve from experiences without being explicitly programmed. Machine Learning is a Science that determines patterns in data. These patterns provide a deeper meaning to problems. First, it helps you understand the problems better and then solve the same with elegance.
+fill_na_test = test_df['charges_2 (%)'].median()
+test_df['charges_2 (%)'].fillna(fill_na_test, inplace=True)
 
-Here’s presenting HackerEarth’s Machine Learning challenge: Carnival Wars!
+fill_na_test = test_df['Minimum_price'].median()
+test_df['Minimum_price'].fillna(fill_na_test, inplace=True)
+```
+**Checking all values were filled**
 
-This challenge is designed to help you improve your Machine Learning skills by competing and learning from fellow participants.
+```python
+test_df.isnull().sum()
+```
+
+**Output:**
+```
+Product_id           0
+Stall_no             0
+instock_date         0
+Market_Category      0
+Customer_name       53
+Loyalty_customer     0
+Product_Category     0
+Grade                0
+Demand               0
+Discount_avail       0
+charges_1            0
+charges_2 (%)        0
+Minimum_price        0
+Maximum_price        0
+dtype: int64
+```
+
+<br><br>
+
+# **Removing The Outlier**
+ 
+Removed Outliers by Using IQR method:
+```python
+def outlier_removal(column):
+    sorted(column)
+    Q1, Q3 = np.percentile(column, [25, 75])
+    
+    IQR = Q3 - Q1
+    
+    lower_value = Q1 - (1.5 * IQR)
+    upper_value = Q3 + (1.5 * IQR)
+    return lower_value, upper_value
+```
